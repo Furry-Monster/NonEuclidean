@@ -2,13 +2,14 @@
 
 NOTE: This is the Linux version using CMake and GLFW.
 
-A NonEuclidean rendering engine for Windows, written in C++ OpenGL.
+A NonEuclidean rendering engine for Linux, written in C++ OpenGL.
+
 To see what this code is about, check out this video:
 https://youtu.be/kEB11PQ9Eo8
 
 ## Source Code Dependencies
 
-Add glew-2.1.0 to the main directory
+GLFW and GLEW now will be found by cmake if installed.
 
 ## Controls
 
