@@ -72,7 +72,7 @@ void Player::Update() {
 
 void Player::Look(float mouseDx, float mouseDy) {
   // Adjust x-axis rotation
-  cam_rx -= mouseDy * GH_MOUSE_SENSITIVITY;
+  cam_rx += mouseDy * GH_MOUSE_SENSITIVITY;
   if (cam_rx > GH_PI / 2) {
     cam_rx = GH_PI / 2;
   } else if (cam_rx < -GH_PI / 2) {

@@ -135,6 +135,10 @@ int Engine::Run() {
     main_cam.SetSize(iWidth, iHeight, n, GH_FAR);
     main_cam.UseViewport();
 
+    // Clear any previous OpenGL errors
+    while (glGetError() != GL_NO_ERROR)
+      ;
+
     // Render scene
     GH_REC_LEVEL = GH_MAX_RECURSION;
     Render(main_cam, 0, nullptr);
@@ -298,20 +302,14 @@ void Engine::Update() {
 
 void Engine::Render(const Camera &cam, GLuint curFBO,
                     const Portal *skipPortal) {
-  // Check for OpenGL errors before rendering
-  GLenum err = glGetError();
-  if (err != GL_NO_ERROR) {
-    std::cerr << "OpenGL error before Render: " << err << std::endl;
-  }
+  // Clear any previous OpenGL errors silently
+  while (glGetError() != GL_NO_ERROR)
+    ;
 
   // Clear buffers
   if (GH_USE_SKY) {
     glClear(GL_DEPTH_BUFFER_BIT);
     sky->Draw(cam);
-    err = glGetError();
-    if (err != GL_NO_ERROR) {
-      std::cerr << "OpenGL error after sky draw: " << err << std::endl;
-    }
   } else {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
@@ -439,10 +437,25 @@ void Engine::InitGLObjects() {
 
   // Check GL functionality - use standard OpenGL 3.3+ functions if available
   occlusionCullingSupported = 0;
-  GLint queryBits = 0;
-  glGetQueryiv(GL_SAMPLES_PASSED, GL_QUERY_COUNTER_BITS, &queryBits);
-  if (queryBits > 0) {
-    occlusionCullingSupported = 1;
+  // Check if occlusion queries are supported
+  // Try to create a test query to see if the feature is available
+  GLuint testQuery = 0;
+  glGenQueries(1, &testQuery);
+  if (testQuery != 0) {
+    // Try to begin a query to check if GL_SAMPLES_PASSED is supported
+    glBeginQuery(GL_SAMPLES_PASSED, testQuery);
+    GLenum err = glGetError();
+    if (err == GL_NO_ERROR) {
+      glEndQuery(GL_SAMPLES_PASSED);
+      err = glGetError();
+      if (err == GL_NO_ERROR) {
+        occlusionCullingSupported = 1;
+      }
+    } else {
+      // Clear the error state
+      glGetError();
+    }
+    glDeleteQueries(1, &testQuery);
   }
 
   // Check for OpenGL errors
