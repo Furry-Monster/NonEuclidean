@@ -1,7 +1,7 @@
 #pragma once
 #include "Object.h"
-#include "Resources.h"
 #include "Portal.h"
+#include "Resources.h"
 
 class Floorplan : public Object {
 public:
@@ -9,11 +9,11 @@ public:
     mesh = AquireMesh("floorplan.obj");
     shader = AquireShader("texture_array");
     texture = AquireTexture("floorplan_textures.bmp", 4, 4);
-    scale = Vector3(0.1524f); //6-inches to meters
+    scale = Vector3(0.1524f); // 6-inches to meters
   }
   virtual ~Floorplan() {}
 
-  void AddPortals(PPortalVec& pvec) const {
+  void AddPortals(PPortalVec &pvec) const {
     std::shared_ptr<Portal> p1(new Portal);
     std::shared_ptr<Portal> p2(new Portal);
     std::shared_ptr<Portal> p3(new Portal);
@@ -32,7 +32,7 @@ public:
 
     p4->pos = Vector3(63.5f, 10, 48) * scale;
     p4->scale = Vector3(4, 10, 1) * scale;
-    p4->euler.y = GH_PI/2;
+    p4->euler.y = GH_PI / 2;
 
     p5->pos = Vector3(63.5f, 10, 7) * scale;
     p5->scale = Vector3(4, 10, 1) * scale;

@@ -1,8 +1,8 @@
 #include "Level5.h"
-#include "Tunnel.h"
 #include "Ground.h"
+#include "Tunnel.h"
 
-void Level5::Load(PObjectVec& objs, PPortalVec& portals, Player& player) {
+void Level5::Load(PObjectVec &objs, PPortalVec &portals, Player &player) {
   std::shared_ptr<Tunnel> tunnel1(new Tunnel(Tunnel::SCALE));
   tunnel1->pos = Vector3(-1.2f, 0, 0);
   tunnel1->scale = Vector3(1, 1, 2.4f);
@@ -44,7 +44,7 @@ void Level5::Load(PObjectVec& objs, PPortalVec& portals, Player& player) {
   std::shared_ptr<Tunnel> tunnel3(new Tunnel(Tunnel::NORMAL));
   tunnel3->pos = Vector3(-1, 0, -4.2f);
   tunnel3->scale = Vector3(0.25f, 0.25f, 0.6f);
-  tunnel3->euler.y = GH_PI/2;
+  tunnel3->euler.y = GH_PI / 2;
   objs.push_back(tunnel3);
 
   player.SetPosition(Vector3(0, GH_PLAYER_HEIGHT, 5));

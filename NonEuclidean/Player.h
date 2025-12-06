@@ -1,6 +1,6 @@
 #pragma once
-#include "Vector.h"
 #include "Physical.h"
+#include "Vector.h"
 
 class Player : public Physical {
 public:
@@ -9,7 +9,7 @@ public:
 
   virtual void Reset() override;
   virtual void Update() override;
-  virtual void OnCollide(Object& other, const Vector3& push) override;
+  virtual void OnCollide(Object &other, const Vector3 &push) override;
 
   void Look(float mouseDx, float mouseDy);
   void Move(float moveF, float moveL);

@@ -1,16 +1,26 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "Engine.h"
+#include <iostream>
+#include <limits.h>
+#include <unistd.h>
 
-int APIENTRY WinMain(HINSTANCE hCurrentInst, HINSTANCE hPreviousInst, LPSTR lpszCmdLine, int nCmdShow) {
-  //Open console in debug mode
-#ifdef _DEBUG
-  AllocConsole();
-  //SetWindowPos(GetConsoleWindow(), 0, 1920, 200, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-  AttachConsole(GetCurrentProcessId());
-  freopen("CON", "w", stdout);
-#endif
+int main(int argc, char *argv[]) {
+  char exePath[PATH_MAX];
+  ssize_t count = readlink("/proc/self/exe", exePath, PATH_MAX);
+  if (count != -1) {
+    exePath[count] = '\0';
+    for (int i = count - 1; i >= 0; --i) {
+      if (exePath[i] == '/') {
+        exePath[i] = '\0';
+        break;
+      }
+    }
+    if (chdir(exePath) != 0) {
+      std::cerr << "Warning: Could not change to executable directory"
+                << std::endl;
+    }
+  }
 
-  //Run the main engine
   Engine engine;
   return engine.Run();
 }

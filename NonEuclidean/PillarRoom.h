@@ -11,7 +11,7 @@ public:
     scale = Vector3(1.1f);
   }
 
-  void SetPortal(Object& portal) const {
+  void SetPortal(Object &portal) const {
     portal.pos = LocalToWorld().MulPoint(Vector3(0, 1.5f, -1));
     portal.euler = euler;
     portal.euler.y -= GH_PI / 2;

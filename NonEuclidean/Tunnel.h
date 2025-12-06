@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.h"
+#include "Resources.h"
 
 class Tunnel : public Object {
 public:
@@ -22,12 +23,12 @@ public:
   }
   virtual ~Tunnel() {}
 
-  void SetDoor1(Object& portal) const {
+  void SetDoor1(Object &portal) const {
     portal.pos = LocalToWorld().MulPoint(Vector3(0, 1, 1));
     portal.euler = euler;
     portal.scale = Vector3(0.6f, 0.999f, 1) * scale.x;
   }
-  void SetDoor2(Object& portal) const {
+  void SetDoor2(Object &portal) const {
     portal.euler = euler;
     if (type == SCALE) {
       portal.pos = LocalToWorld().MulPoint(Vector3(0, 0.5f, -1));

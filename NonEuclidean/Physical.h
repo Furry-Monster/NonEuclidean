@@ -10,16 +10,16 @@ public:
 
   virtual void Reset() override;
   virtual void Update() override;
-  virtual void OnCollide(Object& other, const Vector3& push);
+  virtual void OnCollide(Object &other, const Vector3 &push);
 
-  void SetPosition(const Vector3& _pos) {
+  void SetPosition(const Vector3 &_pos) {
     pos = _pos;
     prev_pos = _pos;
   }
 
-  bool TryPortal(const Portal& portal);
+  bool TryPortal(const Portal &portal);
 
-  virtual Physical* AsPhysical() override { return this; }
+  virtual Physical *AsPhysical() override { return this; }
 
   Vector3 gravity;
   Vector3 velocity;
@@ -27,7 +27,7 @@ public:
   float friction;
   float high_friction;
   float drag;
-  
+
   Vector3 prev_pos;
 
   std::vector<Sphere> hitSpheres;

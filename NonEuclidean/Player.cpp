@@ -1,13 +1,12 @@
 #include "Player.h"
-#include "Input.h"
 #include "GameHeader.h"
-#include <Windows.h>
-#include <iostream>
+#include "Input.h"
 
 Player::Player() {
   Reset();
   hitSpheres.push_back(Sphere(Vector3(0, 0, 0), GH_PLAYER_RADIUS));
-  hitSpheres.push_back(Sphere(Vector3(0, GH_PLAYER_RADIUS - GH_PLAYER_HEIGHT, 0), GH_PLAYER_RADIUS));
+  hitSpheres.push_back(Sphere(
+      Vector3(0, GH_PLAYER_RADIUS - GH_PLAYER_HEIGHT, 0), GH_PLAYER_RADIUS));
 }
 
 void Player::Reset() {
@@ -22,10 +21,12 @@ void Player::Reset() {
 }
 
 void Player::Update() {
-  //Update bobbing motion
+  // Update bobbing motion
   float magT = (prev_pos - pos).Mag() / (GH_DT * p_scale);
-  if (!onGround) { magT = 0.0f; }
-  bob_mag = bob_mag*(1.0f - GH_BOB_DAMP) + magT*GH_BOB_DAMP;
+  if (!onGround) {
+    magT = 0.0f;
+  }
+  bob_mag = bob_mag * (1.0f - GH_BOB_DAMP) + magT * GH_BOB_DAMP;
   if (bob_mag < GH_BOB_MIN) {
     bob_phi = 0.0f;
   } else {
@@ -35,13 +36,13 @@ void Player::Update() {
     }
   }
 
-  //Physics
+  // Physics
   Physical::Update();
 
-  //Looking
+  // Looking
   Look(GH_INPUT->mouse_dx, GH_INPUT->mouse_dy);
 
-  //Movement
+  // Movement
   float moveF = 0.0f;
   float moveL = 0.0f;
   if (GH_INPUT->key['W']) {
@@ -65,12 +66,12 @@ void Player::Update() {
   }
 #endif
 
-  //Reset ground state after update finishes
+  // Reset ground state after update finishes
   onGround = false;
 }
 
 void Player::Look(float mouseDx, float mouseDy) {
-  //Adjust x-axis rotation
+  // Adjust x-axis rotation
   cam_rx -= mouseDy * GH_MOUSE_SENSITIVITY;
   if (cam_rx > GH_PI / 2) {
     cam_rx = GH_PI / 2;
@@ -78,7 +79,7 @@ void Player::Look(float mouseDx, float mouseDy) {
     cam_rx = -GH_PI / 2;
   }
 
-  //Adjust y-axis rotation
+  // Adjust y-axis rotation
   cam_ry -= mouseDx * GH_MOUSE_SENSITIVITY;
   if (cam_ry > GH_PI) {
     cam_ry -= GH_PI * 2;
@@ -88,26 +89,27 @@ void Player::Look(float mouseDx, float mouseDy) {
 }
 
 void Player::Move(float moveF, float moveL) {
-  //Make sure movement is not too fast
-  const float mag = std::sqrt(moveF*moveF + moveL*moveL);
+  // Make sure movement is not too fast
+  const float mag = std::sqrt(moveF * moveF + moveL * moveL);
   if (mag > 1.0f) {
     moveF /= mag;
     moveL /= mag;
   }
 
-  //Movement
+  // Movement
   const Matrix4 camToWorld = LocalToWorld() * Matrix4::RotY(cam_ry);
-  velocity += camToWorld.MulDirection(Vector3(-moveL, 0, -moveF)) * (GH_WALK_ACCEL * GH_DT);
+  velocity += camToWorld.MulDirection(Vector3(-moveL, 0, -moveF)) *
+              (GH_WALK_ACCEL * GH_DT);
 
-  //Don't allow non-falling speeds above the player's max speed
+  // Don't allow non-falling speeds above the player's max speed
   const float tempY = velocity.y;
   velocity.y = 0.0f;
   velocity.ClipMag(p_scale * GH_WALK_SPEED);
   velocity.y = tempY;
 }
 
-void Player::OnCollide(Object& other, const Vector3& push) {
-  //Prevent player from rolling down hills if they're not too steep
+void Player::OnCollide(Object &other, const Vector3 &push) {
+  // Prevent player from rolling down hills if they're not too steep
   Vector3 newPush = push;
   if (push.Normalized().y > 0.7f) {
     newPush.x = 0.0f;
@@ -115,33 +117,35 @@ void Player::OnCollide(Object& other, const Vector3& push) {
     onGround = true;
   }
 
-  //Friction should only apply when player is on ground
+  // Friction should only apply when player is on ground
   const float cur_friction = friction;
   if (!onGround) {
     friction = 0.0f;
   }
 
-  //Base call
+  // Base call
   Physical::OnCollide(other, newPush);
   friction = cur_friction;
 }
 
 Matrix4 Player::WorldToCam() const {
-  return Matrix4::RotX(-cam_rx) * Matrix4::RotY(-cam_ry) * Matrix4::Trans(-CamOffset()) * WorldToLocal();
+  return Matrix4::RotX(-cam_rx) * Matrix4::RotY(-cam_ry) *
+         Matrix4::Trans(-CamOffset()) * WorldToLocal();
 }
 
 Matrix4 Player::CamToWorld() const {
-  return LocalToWorld() * Matrix4::Trans(CamOffset()) * Matrix4::RotY(cam_ry) * Matrix4::RotX(cam_rx);
+  return LocalToWorld() * Matrix4::Trans(CamOffset()) * Matrix4::RotY(cam_ry) *
+         Matrix4::RotX(cam_rx);
 }
 
 Vector3 Player::CamOffset() const {
-  //If bob is too small, don't even bother
+  // If bob is too small, don't even bother
   if (bob_mag < GH_BOB_MIN) {
     return Vector3::Zero();
   }
 
-  //Convert bob to translation
-  const float theta = (GH_PI/2) * std::sin(bob_phi);
+  // Convert bob to translation
+  const float theta = (GH_PI / 2) * std::sin(bob_phi);
   const float y = bob_mag * GH_BOB_OFFS * (1.0f - std::cos(theta));
   return Vector3(0, y, 0);
 }

@@ -1,8 +1,8 @@
 #include "Level4.h"
-#include "Tunnel.h"
 #include "Ground.h"
+#include "Tunnel.h"
 
-void Level4::Load(PObjectVec& objs, PPortalVec& portals, Player& player) {
+void Level4::Load(PObjectVec &objs, PPortalVec &portals, Player &player) {
   std::shared_ptr<Tunnel> tunnel1(new Tunnel(Tunnel::SLOPE));
   tunnel1->pos = Vector3(0, 0, 0);
   tunnel1->scale = Vector3(1, 1, 5);

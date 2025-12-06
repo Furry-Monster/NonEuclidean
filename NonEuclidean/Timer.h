@@ -1,29 +1,31 @@
 #pragma once
-#include <Windows.h>
+#include <chrono>
+#include <stdint.h>
 
 class Timer {
 public:
   Timer() {
-    QueryPerformanceFrequency(&frequency);
+    frequency = std::chrono::high_resolution_clock::period::den /
+                std::chrono::high_resolution_clock::period::num;
   }
 
-  void Start() {
-    QueryPerformanceCounter(&t1);
-  }
+  void Start() { t1 = std::chrono::high_resolution_clock::now(); }
 
   float Stop() {
-    QueryPerformanceCounter(&t2);
-    return float(t2.QuadPart - t1.QuadPart) / frequency.QuadPart;
+    t2 = std::chrono::high_resolution_clock::now();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1);
+    return duration.count() / 1e9f;
   }
 
   int64_t GetTicks() {
-    QueryPerformanceCounter(&t2);
-    return t2.QuadPart;
+    t2 = std::chrono::high_resolution_clock::now();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - startTime);
+    return duration.count();
   }
 
-  int64_t SecondsToTicks(float s) {
-    return int64_t(float(frequency.QuadPart) * s);
-  }
+  int64_t SecondsToTicks(float s) { return int64_t(s * 1e9); }
 
   float StopStart() {
     const float result = Stop();
@@ -32,6 +34,8 @@ public:
   }
 
 private:
-  LARGE_INTEGER frequency;        // ticks per second
-  LARGE_INTEGER t1, t2;           // ticks
+  int64_t frequency; // ticks per second (nanoseconds)
+  std::chrono::high_resolution_clock::time_point startTime =
+      std::chrono::high_resolution_clock::now();
+  std::chrono::high_resolution_clock::time_point t1, t2; // time points
 };

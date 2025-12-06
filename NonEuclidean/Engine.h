@@ -1,15 +1,15 @@
 #pragma once
-#include "GameHeader.h"
 #include "Camera.h"
+#include "GameHeader.h"
 #include "Input.h"
 #include "Object.h"
-#include "Portal.h"
 #include "Player.h"
-#include "Timer.h"
+#include "Portal.h"
 #include "Scene.h"
 #include "Sky.h"
+#include "Timer.h"
 #include <GL/glew.h>
-#include <windows.h>
+#include <GLFW/glfw3.h>
 #include <memory>
 #include <vector>
 
@@ -20,12 +20,15 @@ public:
 
   int Run();
   void Update();
-  void Render(const Camera& cam, GLuint curFBO, const Portal* skipPortal);
+  void Render(const Camera &cam, GLuint curFBO, const Portal *skipPortal);
   void LoadScene(int ix);
 
-  LRESULT WindowProc(HWND hCurWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+  void OnKey(int key, int scancode, int action, int mods);
+  void OnMouseMove(double xpos, double ypos);
+  void OnMouseButton(int button, int action, int mods);
+  void OnWindowResize(int width, int height);
 
-  const Player& GetPlayer() const { return *player; }
+  const Player &GetPlayer() const { return *player; }
   float NearestPortalDist() const;
 
 private:
@@ -36,14 +39,13 @@ private:
   void ConfineCursor();
   void ToggleFullscreen();
 
-  HDC   hDC;           // device context
-  HGLRC hRC;				   // opengl context
-  HWND  hWnd;				   // window
-  HINSTANCE hInstance; // process id
-
-  LONG iWidth;         // window width
-  LONG iHeight;        // window height
-  bool isFullscreen;   // fullscreen state
+  GLFWwindow *window; // GLFW window
+  int iWidth;         // window width
+  int iHeight;        // window height
+  bool isFullscreen;  // fullscreen state
+  double lastMouseX;
+  double lastMouseY;
+  bool firstMouse;
 
   Camera main_cam;
   Input input;

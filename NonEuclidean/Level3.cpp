@@ -1,11 +1,11 @@
 #include "Level3.h"
-#include "Pillar.h"
 #include "Ground.h"
-#include "Statue.h"
+#include "Pillar.h"
 #include "PillarRoom.h"
+#include "Statue.h"
 
-void Level3::Load(PObjectVec& objs, PPortalVec& portals, Player& player) {
-  //Room 1
+void Level3::Load(PObjectVec &objs, PPortalVec &portals, Player &player) {
+  // Room 1
   std::shared_ptr<Pillar> pillar1(new Pillar);
   objs.push_back(pillar1);
 
@@ -22,7 +22,7 @@ void Level3::Load(PObjectVec& objs, PPortalVec& portals, Player& player) {
   statue1->euler.y = GH_PI / 2;
   objs.push_back(statue1);
 
-  //Room 2
+  // Room 2
   std::shared_ptr<Pillar> pillar2(new Pillar);
   pillar2->pos = Vector3(200, 0, 0);
   objs.push_back(pillar2);
@@ -42,7 +42,7 @@ void Level3::Load(PObjectVec& objs, PPortalVec& portals, Player& player) {
   statue2->euler.y = GH_PI;
   objs.push_back(statue2);
 
-  //Room 3
+  // Room 3
   std::shared_ptr<Pillar> pillar3(new Pillar);
   pillar3->pos = Vector3(400, 0, 0);
   objs.push_back(pillar3);
@@ -62,7 +62,7 @@ void Level3::Load(PObjectVec& objs, PPortalVec& portals, Player& player) {
   statue3->euler.y = GH_PI;
   objs.push_back(statue3);
 
-  //Portals
+  // Portals
   std::shared_ptr<Portal> portal1(new Portal);
   pillarRoom1->SetPortal(*portal1);
   portals.push_back(portal1);

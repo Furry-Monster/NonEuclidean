@@ -9,7 +9,7 @@ public:
     shader = AquireShader("sky");
   }
 
-  void Draw(const Camera& cam) {
+  void Draw(const Camera &cam) {
     glDepthMask(GL_FALSE);
     const Matrix4 mvp = cam.projection.Inverse();
     const Matrix4 mv = cam.worldView.Inverse();

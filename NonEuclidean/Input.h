@@ -1,18 +1,16 @@
 #pragma once
 
-struct tagRAWINPUT;
 class Input {
 public:
   Input();
 
   void EndFrame();
-  void UpdateRaw(const tagRAWINPUT* raw);
 
-  //Keyboard
+  // Keyboard
   bool key[256];
   bool key_press[256];
 
-  //Mouse
+  // Mouse
   bool mouse_button[3];
   bool mouse_button_press[3];
   float mouse_dx;
@@ -20,12 +18,12 @@ public:
   float mouse_ddx;
   float mouse_ddy;
 
-  //Joystick
-  //TODO:
+  // Joystick
+  // TODO:
 
-  //Bindings
-  //TODO:
+  // Bindings
+  // TODO:
 
-  //Calibration
-  //TODO:
+  // Calibration
+  // TODO:
 };

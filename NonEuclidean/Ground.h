@@ -4,7 +4,7 @@
 
 class Ground : public Object {
 public:
-  Ground(bool slope=false) {
+  Ground(bool slope = false) {
     if (slope) {
       mesh = AquireMesh("ground_slope.obj");
     } else {
